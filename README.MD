@@ -1,13 +1,11 @@
-React-Codelab-Project is a Single-page infinite-scrolling public memo app implemented using React.js, Redux, Express.js and MongoDB.
+Web Project with ReactJS
 
 ## Features
-- Authentication (Sign Up / Sign In)
-- Memo Creation / Manipulation (edit, delete, star)
-- User Search
+- 회원가입 / 로그인
+- 메모 작성, 관리 (수정, 삭제, 추천)
+- 회원 검색
 
-Preview: https://memo.vlpt.us/
-
-## Following technologies are used
+## Following Technologies
 - axios
 - babel
 - express
@@ -26,20 +24,9 @@ Preview: https://memo.vlpt.us/
 - style-loader
 - css-loader
 
-
-## Prerequisites
-MongoDB and NodeJS should be installed
-
-```
-npm install -g webpack babel nodemon cross-env
-npm install
-```
-
 ## Scripts
 
-- `npm run clean` Deletes Build files of Server and Client
-- `npm run build` Builds Server and Client
-- `npm run start` Start server in production environment
-- `npm run development` Start server in development environment
-
-Express server runs on port 3000, and development server runs on port 4000.
+- `npm run clean` 빌드 파일 삭제
+- `npm run build` 빌드
+- `npm run start` 서버 (port 3000)
+- `npm run development` 개발 서버 (port 4000)
