@@ -40,7 +40,7 @@ class Write extends React.Component {
                         onChange={this.handleChange}></textarea>
                     </div>
                     <div className="card-action">
-                        <a onClick={this.handlePost}>POST</a>
+                        <a onClick={this.handlePost}>작성하기</a>
                     </div>
                 </div>
             </div>

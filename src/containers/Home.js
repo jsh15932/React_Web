@@ -140,7 +140,6 @@ class Home extends React.Component {
                     let $toastContent;
                     switch(this.props.postStatus.error) {
                         case 1:
-                            // IF NOT LOGGED IN, NOTIFY AND REFRESH AFTER
                             $toastContent = $('<span style="color: #FFB4BA">You are not logged in</span>');
                             Materialize.toast($toastContent, 2000);
                             setTimeout(()=> {location.reload(false);}, 2000);

@@ -65,7 +65,7 @@ class Authentication extends React.Component {
         const inputBoxes = (
             <div>
                 <div className="input-field col s12 username">
-                    <label>Username</label>
+                    <label>ID</label>
                     <input
                     name="username"
                     type="text"
@@ -75,7 +75,7 @@ class Authentication extends React.Component {
                     />
                 </div>
                 <div className="input-field col s12">
-                    <label>Password</label>
+                    <label>비밀번호</label>
                     <input
                     name="password"
                     type="password"
@@ -92,7 +92,7 @@ class Authentication extends React.Component {
                 <div className="card-content">
                     <div className="row">
                         { inputBoxes }
-                        <a onClick={this.handleLogin} className="waves-effect waves-light btn">SUBMIT</a>
+                        <a onClick={this.handleLogin} className="waves-effect waves-light btn">확인</a>
                     </div>
                 </div>
 
@@ -100,7 +100,7 @@ class Authentication extends React.Component {
                 <div className="footer">
                     <div className="card-content">
                         <div className="right" >
-                        New Here? <Link to="/register">Create an account</Link>
+                        처음이신가요? <Link to="/register">계정 생성t</Link>
                         </div>
                     </div>
                 </div>
@@ -112,14 +112,14 @@ class Authentication extends React.Component {
            <div className="card-content">
                <div className="row">
                    { inputBoxes }
-                   <a onClick={this.handleRegister} className="waves-effect waves-light btn">CREATE</a>
+                   <a onClick={this.handleRegister} className="waves-effect waves-light btn">생성</a>
                </div>
            </div>
        );
 
         return(
             <div className="container auth">
-                <Link className="logo" to="/">MEMOPAD</Link>
+                <Link className="logo" to="/">자유 게시판</Link>
                 <div className="card">
                     <div className="header blue white-text center">
                         <div className="card-content">{this.props.mode ? "LOGIN" : "REGISTER"}</div>

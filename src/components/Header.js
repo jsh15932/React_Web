@@ -39,10 +39,10 @@ class Header extends React.Component {
             <div>
                 <nav>
                     <div className="nav-wrapper blue darken-1">
-                        <Link to="/" className="brand-logo center">MEMOPAD</Link>
+                        <Link to="/" className="brand-logo center">자유 게시판</Link>
 
                         <ul>
-                            <li><a onClick={this.toggleSearch}><i className="material-icons">search</i></a></li>
+                            <li><a onClick={this.toggleSearch}><i className="material-icons">검색</i></a></li>
                         </ul>
 
                         <div className="right">

@@ -98,7 +98,7 @@ class Memo extends React.Component {
                 </a>
                 <ul id={`dropdown-${data._id}`} className='dropdown-content'>
                     <li><a onClick={this.toggleEdit}>Edit</a></li>
-                    <li><a onClick={this.handleRemove}>Remove</a></li>
+                    <li><a onClick={this.handleRemove}>삭제</a></li>
                 </ul>
             </div>
         );
@@ -137,7 +137,7 @@ class Memo extends React.Component {
                             onChange={this.handleChange}></textarea>
                     </div>
                     <div className="card-action">
-                        <a onClick={this.toggleEdit}>OK</a>
+                        <a onClick={this.toggleEdit}>확인</a>
                     </div>
                 </div>
             </div>

@@ -86,7 +86,7 @@ class Search extends React.Component {
             <div className="search-screen white-text">
                 <div className="right">
                     <a className="waves-effect waves-light btn red lighten-1"
-                        onClick={this.handleClose}>CLOSE</a>
+                        onClick={this.handleClose}>닫기</a>
                 </div>
                 <div className="container">
                     <input placeholder="Search a user"
