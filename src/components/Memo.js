@@ -17,10 +17,8 @@ class Memo extends React.Component {
     }
 
     componentDidMount() {
-        // WHEN COMPONENT MOUNTS, INITIALIZE DROPDOWN
-        // (TRIGGERED WHEN REFRESHED)
         $('#dropdown-button-'+this.props.data._id).dropdown({
-            belowOrigin: true // Displays dropdown below the button
+            belowOrigin: true 
         });
     }
 
@@ -40,14 +38,11 @@ class Memo extends React.Component {
     }
 
     componentDidUpdate(prevProps, prveState) {
-        // WHEN COMPONENT UPDATES, INITIALIZE DROPDOWN
-        // (TRIGGERED WHEN LOGGED IN)
         $('#dropdown-button-'+this.props.data._id).dropdown({
-            belowOrigin: true // Displays dropdown below the button
+            belowOrigin: true 
         });
 
         if(this.state.editMode) {
-            // Trigger key up event to the edit input so that it auto-resizes (Materializecss Feature)
             $(this.input).keyup();
         }
     }
@@ -108,7 +103,6 @@ class Memo extends React.Component {
             </div>
         );
 
-        // EDITED info
         const editedInfo = (
             <span style={{color: '#AAB5BC'}}> · Edited <TimeAgo date={this.props.data.date.edited} live={true}/></span>
         );

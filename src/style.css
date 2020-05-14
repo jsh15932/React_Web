@@ -73,7 +73,7 @@ a {
     margin-top: 20px;
 }
 
-/* WRITE */
+/* 작성 */
 
 .write .materialize-textarea {
     padding: 0px;
@@ -91,7 +91,7 @@ a {
 }
 
 
-/* Memo */
+/* 메모 */
 
 .memo .info {
     font-size: 18px;
@@ -158,7 +158,7 @@ a {
 }
 
 
-/* ANIMATION */
+/* 애니메이션 */
 @-webkit-keyframes memo-enter {
     0% {
       opacity: 0;
@@ -184,7 +184,7 @@ a {
     animation-name: memo-enter;
 }
 
-/* ANIMATION */
+/* 애니메이션 */
 @-webkit-keyframes memo-leave {
     0% {
       opacity: 1;
@@ -237,7 +237,7 @@ a {
 
 
 
-/* SEARCH */
+/* 검색 */
 .search-screen {
     position: fixed;
     overflow-y: none;

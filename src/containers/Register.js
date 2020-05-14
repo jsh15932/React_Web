@@ -19,12 +19,6 @@ class Register extends React.Component {
                     browserHistory.push('/login');
                     return true;
                 } else {
-                    /*
-                       ERROR CODES:
-                           1: BAD USERNAME
-                           2: BAD PASSWORD
-                           3: USERNAME EXISTS
-                   */
                    let errorMessage = [
                        'Invalid Username',
                        'Password is too short',

@@ -31,7 +31,6 @@ export default function memo(state, action) {
     }
 
     switch(action.type) {
-        /* MEMO_POST */
         case types.MEMO_POST:
             return update(state, {
                 post: {
@@ -53,7 +52,6 @@ export default function memo(state, action) {
                 }
             });
 
-        /* MEMO_LIST */
         case types.MEMO_LIST:
             return update(state, {
                 list: {
@@ -88,7 +86,6 @@ export default function memo(state, action) {
                 }
             });
 
-        /* MEMO EDIT */
         case types.MEMO_EDIT:
             return update(state, {
                 edit: {
@@ -116,7 +113,6 @@ export default function memo(state, action) {
                 }
             });
 
-        /* MEMO REMOVE */
         case types.MEMO_REMOVE:
             return update(state, {
                 remove: {
@@ -141,7 +137,6 @@ export default function memo(state, action) {
                 }
             });
 
-        /* MEMO STAR */
         case types.MEMO_STAR:
             return update(state, {
                 star: {

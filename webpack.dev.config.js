@@ -26,7 +26,6 @@ module.exports = {
             "*": "http://localhost:3000"
         },
         stats: {
-          // Config for minimal console.log mess.
           assets: false,
           colors: true,
           version: false,

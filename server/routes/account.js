@@ -3,16 +3,8 @@ import Account from '../models/account';
 
 const router = express.Router();
 
-/*
-    ACCOUNT SIGNUP: POST /api/account/signup
-    BODY SAMPLE: { "username": "test", "password": "test" }
-    ERROR CODES:
-        1: BAD USERNAME
-        2: BAD PASSWORD
-        3: USERNAM EXISTS
-*/
 router.post('/signup', (req, res) => {
-    // CHECK USERNAME FORMAT
+    // 회원 이름 양식
     let usernameRegex = /^[a-z0-9]+$/;
 
     if(!usernameRegex.test(req.body.username)) {
@@ -22,7 +14,7 @@ router.post('/signup', (req, res) => {
         });
     }
 
-    // CHECK PASS LENGTH
+    // 비밀번호 길이 설정
     if(req.body.password.length < 4 || typeof req.body.password !== "string") {
         return res.status(400).json({
             error: "BAD PASSWORD",
@@ -30,7 +22,7 @@ router.post('/signup', (req, res) => {
         });
     }
 
-    // CHECK USER EXISTANCE
+    // 회원 중복 확인
     Account.findOne({ username: req.body.username }, (err, exists) => {
         if (err) throw err;
         if(exists){
@@ -40,7 +32,7 @@ router.post('/signup', (req, res) => {
             });
         }
 
-        // CREATE ACCOUNT
+        // 계정 생성
         let account = new Account({
             username: req.body.username,
             password: req.body.password
@@ -48,7 +40,7 @@ router.post('/signup', (req, res) => {
 
         account.password = account.generateHash(account.password);
 
-        // SAVE IN THE DATABASE
+        // 데이터베이스 저장
         account.save( err => {
             if(err) throw err;
             return res.json({ success: true });
@@ -57,12 +49,6 @@ router.post('/signup', (req, res) => {
     });
 });
 
-/*
-    ACCOUNT SIGNIN: POST /api/account/signin
-    BODY SAMPLE: { "username": "test", "password": "test" }
-    ERROR CODES:
-        1: LOGIN FAILED
-*/
 router.post('/signin', (req, res) => {
 
     if(typeof req.body.password !== "string") {
@@ -72,11 +58,11 @@ router.post('/signin', (req, res) => {
         });
     }
 
-    // FIND THE USER BY USERNAME
+    // 회원 이름으로 회원 검색
     Account.findOne({ username: req.body.username}, (err, account) => {
         if(err) throw err;
 
-        // CHECK ACCOUNT EXISTANCY
+        // 계정 유무 확인
         if(!account) {
             return res.status(401).json({
                 error: "LOGIN FAILED",
@@ -84,7 +70,7 @@ router.post('/signin', (req, res) => {
             });
         }
 
-        // CHECK WHETHER THE PASSWORD IS VALID
+        // 비밀번호 유효성 확인
         if(!account.validateHash(req.body.password)) {
             return res.status(401).json({
                 error: "LOGIN FAILED",
@@ -92,23 +78,20 @@ router.post('/signin', (req, res) => {
             });
         }
 
-        // ALTER SESSION
+        // 세션 변경
         let session = req.session;
         session.loginInfo = {
             _id: account._id,
             username: account.username
         };
 
-        // RETURN SUCCESS
+        // 가입 완료
         return res.json({
             success: true
         });
     });
 });
 
-/*
-    GET CURRENT USER INFO GET /api/account/getInfo
-*/
 router.get('/getinfo', (req, res) => {
     if(typeof req.session.loginInfo === "undefined") {
         return res.status(401).json({
@@ -119,20 +102,13 @@ router.get('/getinfo', (req, res) => {
     res.json({ info: req.session.loginInfo });
 });
 
-/*
-    LOGOUT: POST /api/account/logout
-*/
 router.post('/logout', (req, res) => {
     req.session.destroy(err => { if(err) throw err; });
     return res.json({ sucess: true });
 });
 
-
-/*
-    SEARCH USER: GET /api/account/search/:username
-*/
 router.get('/search/:username', (req, res) => {
-    // SEARCH USERNAMES THAT STARTS WITH GIVEN KEYWORD USING REGEX
+    // 키워드로 회원 이름 검색
     var re = new RegExp('^' + req.params.username);
     Account.find({username: {$regex: re}}, {_id: false, username: true})
     .limit(5)
@@ -143,7 +119,6 @@ router.get('/search/:username', (req, res) => {
     });
 });
 
-// EMPTY SEARCH REQUEST: GET /api/account/search
 router.get('/search', (req, res) => {
     res.json([]);
 });

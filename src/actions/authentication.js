@@ -14,7 +14,7 @@ import axios from 'axios';
 
 /* ====== AUTH ====== */
 
-/* LOGIN */
+/* 로그인 */
 export function loginRequest(username, password) {
     return (dispatch) => {
             dispatch(login());
@@ -47,10 +47,9 @@ export function loginFailure() {
     };
 }
 
-/* REGISTER */
+/* 회원가입 */
 export function registerRequest(username, password) {
     return (dispatch) => {
-        // inform register API is starting
         dispatch(register());
 
         return axios.post('/api/account/signup', { username, password })
@@ -81,7 +80,7 @@ export function registerFailure(error) {
     };
 }
 
-/* GET STATUS */
+/* 상태 */
 
 export function getStatusRequest() {
     return (dispatch) => {
@@ -115,7 +114,7 @@ export function getStatusFailure() {
 }
 
 
-/* LOGOUT */
+/* 로그아웃 */
 export function logoutRequest() {
     return (dispatch) => {
         return axios.post('/api/account/logout')

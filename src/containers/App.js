@@ -17,7 +17,6 @@ class App extends React.Component {
             () => {
                  Materialize.toast('Good Bye!', 2000);
 
-                 // EMPTIES THE SESSION
                 let loginData = {
                     isLoggedIn: false,
                     username: ''
@@ -33,32 +32,23 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        // get cookie by name
         function getCookie(name) {
             var value = "; " + document.cookie;
             var parts = value.split("; " + name + "=");
             if (parts.length == 2) return parts.pop().split(";").shift();
         }
 
-        // get login data from cookie
         let loginData = getCookie('key');
 
-        // if loginData is undefined, do nothing
         if(typeof loginData === "undefined") return;
 
-        // decode base64 & parse json
         loginData = JSON.parse(atob(loginData));
 
-        // if not logged in, do nothing
         if(!loginData.isLoggedIn) return;
 
-        // page refreshed & has a session in cookie,
-        // check whether this cookie is valid or not
         this.props.getStatusRequest().then(
             () => {
                 if(!this.props.status.valid) {
-                    // if session is not valid
-                    // logout the session
                     loginData = {
                         isLoggedIn: false,
                         username: ''
@@ -66,7 +56,6 @@ class App extends React.Component {
 
                     document.cookie = 'key=' + btoa(JSON.stringify(loginData));
 
-                    // and notify
                     let $toastContent = $('<span style="color: #FFB4BA">Your session is expired, please log in again</span>');
                     Materialize.toast($toastContent, 4000);
                 }

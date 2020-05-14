@@ -36,11 +36,10 @@ class Home extends React.Component {
         };
 
         const loadUntilScrollable = () => {
-            // IF THE SCROLLBAR DOES NOT EXIST,
+
             if($("body").height() < $(window).height()) {
                 this.loadOldMemo().then(
                     () => {
-                        // DO THIS RECURSIVELY UNLESS IT'S LAST PAGE
                         if(!this.props.isLast) {
                             loadUntilScrollable();
                         }
@@ -61,7 +60,6 @@ class Home extends React.Component {
         );
 
         $(window).scroll(() => {
-            // WHEN HEIGHT UNDER SCROLLBOTTOM IS LESS THEN 250
             if ($(document).height() - $(window).height() - $(window).scrollTop() < 250) {
                 if(!this.state.loadingState) {
                     this.loadOldMemo();
@@ -80,10 +78,8 @@ class Home extends React.Component {
     }
 
     componentWillUnmount() {
-        // STOPS THE loadMemoLoop
         clearTimeout(this.memoLoaderTimeoutId);
 
-        // REMOVE WINDOWS SCROLL LISTENER
         $(window).unbind();
 
         this.setState({
@@ -99,14 +95,12 @@ class Home extends React.Component {
     }
 
     loadNewMemo() {
-         // CANCEL IF THERE IS A PENDING REQUEST
         if(this.props.listStatus === 'WAITING') {
             return new Promise((resolve, reject) => {
                 resolve();
             });
         }
 
-        // IF PAGE IS EMPTY, DO THE INITIAL LOADING
         if(this.props.memoData.length === 0 )
             return this.props.memoListRequest(true);
 
@@ -116,7 +110,6 @@ class Home extends React.Component {
     }
 
     loadOldMemo() {
-        // CANCEL IF USER IS READING THE LAST PAGE
         if(this.props.isLast) {
             return new Promise(
                 (resolve, reject)=> {
@@ -125,12 +118,9 @@ class Home extends React.Component {
             );
         }
 
-        // GET ID OF THE MEMO AT THE BOTTOM
         let lastId = this.props.memoData[this.props.memoData.length - 1]._id;
 
-        // START REQUEST
         return this.props.memoListRequest(false, 'old', lastId, this.props.username).then(() => {
-            // IF IT IS LAST PAGE, NOTIFY
             if(this.props.isLast) {
                 Materialize.toast('You are reading the last page', 2000);
             }
@@ -141,20 +131,12 @@ class Home extends React.Component {
         return this.props.memoPostRequest(contents).then(
             () => {
                 if(this.props.postStatus.status === "SUCCESS") {
-                    // TRIGGER LOAD NEW MEMO
-                    // TO BE IMPLEMENTED
                     this.loadNewMemo().then(
                         () => {
                             Materialize.toast("Success!", 2000);
                         }
                     );
                 } else {
-                    /*
-                        ERROR CODES
-                            1: NOT LOGGED IN
-                            2: EMPTY CONTENTS
-                    */
-
                     let $toastContent;
                     switch(this.props.postStatus.error) {
                         case 1:
@@ -182,14 +164,6 @@ class Home extends React.Component {
             if(this.props.editStatus.status === 'SUCCESS') {
                 Materialize.toast('Success!', 2000);
             } else {
-                /*
-                       ERROR CODES
-                           1: INVALID ID,
-                           2: EMPTY CONTENTS
-                           3: NOT LOGGED IN
-                           4: NO RESOURCE
-                           5: PERMISSION FAILURE
-                */
                 let errorMessage = [
                         'Something broke',
                         'Please write soemthing',
@@ -200,11 +174,9 @@ class Home extends React.Component {
 
                 let error = this.props.editStatus.error;
 
-                // NOTIFY ERROR
                 let $toastContent = $('<span style="color: #FFB4BA">' + errorMessage[error - 1] + '</span>');
                 Materialize.toast($toastContent, 2000);
 
-                // IF NOT LOGGED IN, REFRESH THE PAGE AFTER 2 SECONDS
                 if(error === 3) {
                     setTimeout( ()=> {location.reload(false);}, 2000);
                 }
@@ -224,14 +196,6 @@ class Home extends React.Component {
                         }
                     }, 1000);
                 } else {
-                    /*
-                    DELETE MEMO: DELETE /api/memo/:id
-                    ERROR CODES
-                        1: INVALID ID
-                        2: NOT LOGGED IN
-                        3: NO RESOURCE
-                        4: PERMISSION FAILURE
-                    */
                     let errorMessage = [
                         'Something broke',
                         'You are not logged in',
@@ -239,12 +203,9 @@ class Home extends React.Component {
                         'You do not have permission'
                     ];
 
-                     // NOTIFY ERROR
                     let $toastContent = $('<span style="color: #FFB4BA">' + errorMessage[this.props.removeStatus.error - 1] + '</span>');
                     Materialize.toast($toastContent, 2000);
 
-
-                    // IF NOT LOGGED IN, REFRESH THE PAGE
                     if(this.props.removeStatus.error === 2) {
                         setTimeout(()=> {location.reload(false);}, 2000);
                     }
@@ -257,26 +218,15 @@ class Home extends React.Component {
         this.props.memoStarRequest(id, index).then(
             () => {
                 if(this.props.starStatus.status !== "SUCCESS") {
-                    /*
-                        TOGGLES STAR OF MEMO: POST /api/memo/star/:id
-                        ERROR CODES
-                            1: INVALID ID
-                            2: NOT LOGGED IN
-                            3: NO RESOURCE
-                    */
                     let errorMessage= [
                         'Something broke',
                         'You are not logged in',
                         'That memo does not exist'
                     ];
 
-
-                    // NOTIFY ERROR
                     let $toastContent = $('<span style="color: #FFB4BA">' + errorMessage[this.props.starStatus.error - 1] + '</span>');
                     Materialize.toast($toastContent, 2000);
 
-
-                    // IF NOT LOGGED IN, REFRESH THE PAGE
                     if(this.props.starStatus.error === 2) {
                         setTimeout(()=> {location.reload(false);}, 2000);
                     }

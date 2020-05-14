@@ -8,8 +8,6 @@ class Header extends React.Component {
     constructor(props) {
         super(props);
 
-        // IMPLEMENT: CREATE A SEARCH STATUS
-
         this.state = {
             search: false
         };
@@ -55,7 +53,7 @@ class Header extends React.Component {
                     </div>
                 </nav>
                     <ReactCSSTransitionGroup transitionName="search" transitionEnterTimeout={300} transitionLeaveTimeout={300}>
-                        { /* IMPLEMENT: SHOW SEARCH WHEN SEARCH STATUS IS TRUE */}
+                        { }
                         {this.state.search ? <Search onClose={this.toggleSearch}
                         onSearch={this.props.onSearch}
                         usernames={this.props.usernames}/> : undefined }

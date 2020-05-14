@@ -4,15 +4,8 @@ import mongoose from 'mongoose';
 
 const router = express.Router();
 
-/*
-    WRITE MEMO: POST /api/memo
-    BODY SAMPLE: { contents: "sample "}
-    ERROR CODES
-        1: NOT LOGGED IN
-        2: EMPTY CONTENTS
-*/
 router.post('/', (req, res) => {
-    // CHECK LOGIN STATUS
+    // 로그인 상태 확인
     if(typeof req.session.loginInfo === 'undefined') {
         return res.status(403).json({
             error: "NOT LOGGED IN",
@@ -20,7 +13,7 @@ router.post('/', (req, res) => {
         });
     }
 
-    // CHECK CONTENTS VALID
+    // 내용 유효성 확인
     if(typeof req.body.contents !== 'string') {
         return res.status(400).json({
             error: "EMPTY CONTENTS",
@@ -35,32 +28,21 @@ router.post('/', (req, res) => {
         });
     }
 
-    // CREATE NEW MEMO
+    // 새 메모 작성
     let memo = new Memo({
         writer: req.session.loginInfo.username,
         contents: req.body.contents
     });
 
-    // SAVE IN DATABASE
+    // 데이터베이스에 저장
     memo.save( err => {
         if(err) throw err;
         return res.json({ success: true });
     });
 });
 
-/*
-    MODIFY MEMO: PUT /api/memo/:id
-    BODY SAMPLE: { contents: "sample "}
-    ERROR CODES
-        1: INVALID ID,
-        2: EMPTY CONTENTS
-        3: NOT LOGGED IN
-        4: NO RESOURCE
-        5: PERMISSION FAILURE
-*/
 router.put('/:id', (req, res) => {
-
-    // CHECK MEMO ID VALIDITY
+    // 메모 유효성 확인
     if(!mongoose.Types.ObjectId.isValid(req.params.id)) {
         return res.status(400).json({
             error: "INVALID ID",
@@ -68,7 +50,7 @@ router.put('/:id', (req, res) => {
         });
     }
 
-    // CHECK CONTENTS VALID
+    // 내용 유효성 확인
     if(typeof req.body.contents !== 'string') {
         return res.status(400).json({
             error: "EMPTY CONTENTS",
@@ -83,7 +65,7 @@ router.put('/:id', (req, res) => {
         });
     }
 
-    // CHECK LOGIN STATUS
+    // 로그인 상태 확인
     if(typeof req.session.loginInfo === 'undefined') {
         return res.status(403).json({
             error: "NOT LOGGED IN",
@@ -91,11 +73,11 @@ router.put('/:id', (req, res) => {
         });
     }
 
-    // FIND MEMO
+    // 메모 찾기
     Memo.findById(req.params.id, (err, memo) => {
         if(err) throw err;
 
-        // IF MEMO DOES NOT EXIST
+        // 메모가 존재하지 않음
         if(!memo) {
             return res.status(404).json({
                 error: "NO RESOURCE",
@@ -103,7 +85,7 @@ router.put('/:id', (req, res) => {
             });
         }
 
-        // IF EXISTS, CHECK WRITER
+        // 메모가 존재함, 작성자 확인
         if(memo.writer != req.session.loginInfo.username) {
             return res.status(403).json({
                 error: "PERMISSION FAILURE",
@@ -111,7 +93,7 @@ router.put('/:id', (req, res) => {
             });
         }
 
-        // MODIFY AND SAVE IN DATABASE
+        // 데이터베이스에서 수정 및 저장
         memo.contents = req.body.contents;
         memo.date.edited = new Date();
         memo.is_edited = true;
@@ -127,17 +109,8 @@ router.put('/:id', (req, res) => {
     });
 });
 
-/*
-    DELETE MEMO: DELETE /api/memo/:id
-    ERROR CODES
-        1: INVALID ID
-        2: NOT LOGGED IN
-        3: NO RESOURCE
-        4: PERMISSION FAILURE
-*/
 router.delete('/:id', (req, res) => {
-
-    // CHECK MEMO ID VALIDITY
+    // 메모 유효성 확인
     if(!mongoose.Types.ObjectId.isValid(req.params.id)) {
         return res.status(400).json({
             error: "INVALID ID",
@@ -145,7 +118,7 @@ router.delete('/:id', (req, res) => {
         });
     }
 
-    // CHECK LOGIN STATUS
+    // 로그인 상태 확인
     if(typeof req.session.loginInfo === 'undefined') {
         return res.status(403).json({
             error: "NOT LOGGED IN",
@@ -153,7 +126,7 @@ router.delete('/:id', (req, res) => {
         });
     }
 
-    // FIND MEMO AND CHECK FOR WRITER
+    // 메모 찾기, 작성자 확인
     Memo.findById(req.params.id, (err, memo) => {
         if(err) throw err;
 
@@ -170,7 +143,7 @@ router.delete('/:id', (req, res) => {
             });
         }
 
-        // REMOVE THE MEMO
+        // 메모 삭제
         Memo.remove({ _id: req.params.id }, err => {
             if(err) throw err;
             res.json({ success: true });
@@ -179,9 +152,6 @@ router.delete('/:id', (req, res) => {
 
 });
 
-/*
-    READ MEMO: GET /api/memo
-*/
 router.get('/', (req, res) => {
     Memo.find()
     .sort({"_id": -1})
@@ -192,14 +162,11 @@ router.get('/', (req, res) => {
     });
 });
 
-/*
-    READ ADDITIONAL (OLD/NEW) MEMO: GET /api/memo/:listType/:id
-*/
 router.get('/:listType/:id', (req, res) => {
     let listType = req.params.listType;
     let id = req.params.id;
 
-    // CHECK LIST TYPE VALIDITY
+    // 리스트 양식 유효성 확인
     if(listType !== 'old' && listType !== 'new') {
         return res.status(400).json({
             error: "INVALID LISTTYPE",
@@ -207,7 +174,7 @@ router.get('/:listType/:id', (req, res) => {
         });
     }
 
-    // CHECK MEMO ID VALIDITY
+    // 메모 ID 유효성 확인
     if(!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(400).json({
             error: "INVALID ID",
@@ -218,7 +185,7 @@ router.get('/:listType/:id', (req, res) => {
     let objId = new mongoose.Types.ObjectId(req.params.id);
 
     if(listType === 'new') {
-        // GET NEWER MEMO
+        // 새 메모
         Memo.find({ _id: { $gt: objId }})
         .sort({_id: -1})
         .limit(6)
@@ -227,7 +194,7 @@ router.get('/:listType/:id', (req, res) => {
             return res.json(memos);
         });
     } else {
-        // GET OLDER MEMO
+        // 메모 불러오기
         Memo.find({ _id: { $lt: objId }})
         .sort({_id: -1})
         .limit(6)
@@ -238,16 +205,8 @@ router.get('/:listType/:id', (req, res) => {
     }
 });
 
-
-/*
-    TOGGLES STAR OF MEMO: POST /api/memo/star/:id
-    ERROR CODES
-        1: INVALID ID
-        2: NOT LOGGED IN
-        3: NO RESOURCE
-*/
 router.post('/star/:id', (req, res) => {
-    // CHECK MEMO ID VALIDITY
+    // 메모 유효성 확인
     if(!mongoose.Types.ObjectId.isValid(req.params.id)) {
         return res.status(400).json({
             error: "INVALID ID",
@@ -255,7 +214,7 @@ router.post('/star/:id', (req, res) => {
         });
     }
 
-    // CHECK LOGIN STATUS
+    // 로그인 상태 확인
     if(typeof req.session.loginInfo === 'undefined') {
         return res.status(403).json({
             error: "NOT LOGGED IN",
@@ -263,11 +222,11 @@ router.post('/star/:id', (req, res) => {
         });
     }
 
-    // FIND MEMO
+    // 메모 찾기
     Memo.findById(req.params.id, (err, memo) => {
         if(err) throw err;
 
-        // MEMO DOES NOT EXIST
+        // 메모가 존재하지 않음
         if(!memo) {
             return res.status(404).json({
                 error: "NO RESOURCE",
@@ -275,21 +234,21 @@ router.post('/star/:id', (req, res) => {
             });
         }
 
-        // GET INDEX OF USERNAME IN THE ARRAY
+        // 회원 이름 불러오기
         let index = memo.starred.indexOf(req.session.loginInfo.username);
 
-        // CHECK WHETHER THE USER ALREADY HAS GIVEN A STAR
+        // 회원 추천 유무 확인
         let hasStarred = (index === -1) ? false : true;
 
         if(!hasStarred) {
-            // IF IT DOES NOT EXIST
+            // 존재하지 않음
             memo.starred.push(req.session.loginInfo.username);
         } else {
-            // ALREADY starred
+            // 이미 추천 받음
             memo.starred.splice(index, 1);
         }
 
-        // SAVE THE MEMO
+        // 메모 저장
         memo.save((err, memo) => {
             if(err) throw err;
             res.json({
@@ -301,9 +260,6 @@ router.post('/star/:id', (req, res) => {
     });
 });
 
-/*
-    READ MEMO OF A USER: GET /api/memo/:username
-*/
 router.get('/:username', (req, res) => {
     Memo.find({writer: req.params.username})
     .sort({"_id": -1})
@@ -314,15 +270,11 @@ router.get('/:username', (req, res) => {
     });
 });
 
-
-/*
-    READ ADDITIONAL (OLD/NEW) MEMO OF A USER: GET /api/memo/:username/:listType/:id
-*/
 router.get('/:username/:listType/:id', (req, res) => {
     let listType = req.params.listType;
     let id = req.params.id;
 
-    // CHECK LIST TYPE VALIDITY
+    // 리스트 양식 유효성 확인
     if(listType !== 'old' && listType !== 'new') {
         return res.status(400).json({
             error: "INVALID LISTTYPE",
@@ -330,7 +282,7 @@ router.get('/:username/:listType/:id', (req, res) => {
         });
     }
 
-    // CHECK MEMO ID VALIDITY
+    // 메모 유효성 확인
     if(!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(400).json({
             error: "INVALID ID",
@@ -341,7 +293,7 @@ router.get('/:username/:listType/:id', (req, res) => {
     let objId = new mongoose.Types.ObjectId(req.params.id);
 
     if(listType === 'new') {
-        // GET NEWER MEMO
+        // 새 메모
         Memo.find({ writer: req.params.username, _id: { $gt: objId }})
         .sort({_id: -1})
         .limit(6)
@@ -350,7 +302,7 @@ router.get('/:username/:listType/:id', (req, res) => {
             return res.json(memos);
         });
     } else {
-        // GET OLDER MEMO
+        // 메모 불러오기
         Memo.find({ writer: req.params.username, _id: { $lt: objId }})
         .sort({_id: -1})
         .limit(6)

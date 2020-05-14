@@ -17,7 +17,8 @@ import {
 } from './ActionTypes';
 import axios from 'axios';
 
-/* MEMO POST */
+/* 메모 작성 */
+
 export function memoPostRequest(contents) {
     return (dispatch) => {
         dispatch(memoPost());
@@ -50,28 +51,18 @@ export function memoPostFailure(error) {
     };
 }
 
-/* MEMO LIST */
+/* 메모 리스트 */
 
-/*
-    Parameter:
-        - isInitial: whether it is for initial loading
-        - listType:  OPTIONAL; loading 'old' memo or 'new' memo
-        - id:        OPTIONAL; memo id (one at the bottom or one at the top)
-        - username:  OPTIONAL; find memos of following user
-*/
 export function memoListRequest(isInitial, listType, id, username) {
     return (dispatch) => {
-        // to be implemented
         dispatch(memoList());
 
         let url = '/api/memo';
 
         if(typeof username === "undefined") {
-            // username not given, load public memo
             url = isInitial ? url : `${url}/${listType}/${id}`;
-            // or url + '/' + listType + Z'/' +  id
         } else {
-            // load memos of a user
+
             url = isInitial ? `${url}/${username}` : `${url}/${username}/${listType}/${id}`;
         }
 
@@ -105,7 +96,8 @@ export function memoListFailure() {
     };
 }
 
-/* MEMO EDIT */
+/* 메모 수정 */
+
 export function memoEditRequest(id, index, contents) {
     return (dispatch) => {
         dispatch(memoEdit());
@@ -140,10 +132,10 @@ export function memoEditFailure(error) {
     };
 }
 
-/* MEMO REMOVE */
+/* 메모 삭제 */
+
 export function memoRemoveRequest(id, index) {
     return (dispatch) => {
-        // TO BE IMPLEMENTED
         dispatch(memoRemove());
 
         return axios.delete('/api/memo/' + id)
@@ -176,7 +168,8 @@ export function memoRemoveFailure(error) {
     };
 }
 
-/* MEMO STAR */
+/* 메모 추천 */
+
 export function memoStarRequest(id, index) {
     return (dispatch) => {
         dispatch(memoStar());

@@ -14,7 +14,6 @@ class Search extends React.Component {
         this.handleSearch = this.handleSearch.bind(this);
         this.handlekeyDown = this.handleKeyDown.bind(this);
 
-        // LISTEN ESC KEY, CLOSE IF PRESSED
         const listenEscKey = (evt) => {
             evt = evt || window.event;
             if (evt.keyCode == 27) {
@@ -44,7 +43,6 @@ class Search extends React.Component {
     }
 
     handleKeyDown(e) {
-        // IF PRESSED ENTER, TRIGGER TO NAVIGATE TO THE FIRST USER SHOWN
                 if(e.keyCode === 13) {
                     if(this.props.usernames.length > 0) {
                         browserHistory.push('/wall/' + this.props.usernames[0].username);

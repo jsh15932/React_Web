@@ -23,7 +23,6 @@ export default function authentication(state, action) {
     }
 
     switch(action.type) {
-        /* LOGIN */
         case types.AUTH_LOGIN:
             return update(state, {
                 login: {
@@ -47,7 +46,6 @@ export default function authentication(state, action) {
                 }
             });
 
-        /* REGISTER */
         case types.AUTH_REGISTER:
             return update(state, {
                 register: {
@@ -69,7 +67,6 @@ export default function authentication(state, action) {
                 }
             });
 
-        /* getinfo */
         case types.AUTH_GET_STATUS:
             return update(state, {
                 status: {
@@ -91,7 +88,6 @@ export default function authentication(state, action) {
                 }
             });
 
-        /* logout */
         case types.AUTH_LOGOUT:
             return update(state, {
                 status: {
